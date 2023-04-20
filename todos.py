@@ -13,10 +13,18 @@ tareas = [
     }
 ]
 
-@app.route("/todos", methods = ['POST'])
+@app.route("/todos", methods = ['GET','POST'])
 def addTodos():
-    tarea = request.get_json()
-    tareas.append(tarea)
-    return tareas
+    
+    if(request.method=="GET"):
+        return tareas
+    else:
+        tarea = request.get_json()
+        tareas.append(tarea)
+        return tareas
+    
+@app.route("/todos/<int:numero>", methods=['GET'])
+def tarea(numero):
+    return tareas[numero]
 
 app.run()
