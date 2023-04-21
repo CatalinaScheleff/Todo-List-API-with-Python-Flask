@@ -1,8 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 app = Flask (__name__)
 
-tareas = [
+todos = [
     {
         "done": True,
         "label": "Sample Todo 1"
@@ -13,18 +13,20 @@ tareas = [
     }
 ]
 
-@app.route("/todos", methods = ['GET','POST'])
+@app.route("/todos", methods = ['GET'])
+def getTodos():
+    return jsonify(todos)
+   
+    
+@app.route("/todos", methods = ['POST'])
 def addTodos():
+    task = request.get_json()
+    todos.append(task)
+    return todos
     
-    if(request.method=="GET"):
-        return tareas
-    else:
-        tarea = request.get_json()
-        tareas.append(tarea)
-        return tareas
-    
-@app.route("/todos/<int:numero>", methods=['GET'])
-def tarea(numero):
-    return tareas[numero]
+@app.route("/todos/<int:index>", methods=['DELETE'])
+def deleteTodos(index):
+    todos.pop(index)
+    return jsonify(todos)
 
 app.run()
